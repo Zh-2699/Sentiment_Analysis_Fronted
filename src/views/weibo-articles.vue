@@ -1,11 +1,11 @@
 <template>
   <div class="article-page">
     <!-- 搜索文章 -->
-    <div class="search-bar">
+    <!-- <div class="search-bar">
       <input type="text" placeholder="搜索文章..." />
       <button>搜索</button>
-    </div>
-
+    </div> -->
+    <SearchBar placeholder="搜索文章..." :isSticky="flase" @search="handleSearch" />
     <!-- 分组选择 -->
     <div class="group-selector">
       <div>
@@ -17,12 +17,7 @@
           </option>
         </select>
       </div>
-      <div class="spider">
-        <div class="card" @click="crawData">
-          <i class="fas fa-spider"></i>
-          <h3>爬取数据</h3>
-        </div>
-      </div>
+      <SpiderButton @crawl="crawData" />
     </div>
 
     <!-- 文章展示区域 -->
@@ -64,6 +59,8 @@ import { ref, onMounted} from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import SpiderButton from '../components/button/SpiderButton.vue';
+import SearchBar from '../components/SearchBar.vue';
 
 const articleGroups = ref([]); // 分组数据
 const selectedGroup = ref('热门'); // 当前选中的分组
@@ -160,18 +157,22 @@ const crawData = async () =>{
     const response = await axios.post('http://127.0.0.1:5000/article/crawl', {
       group: selectedGroup.value
     });
-  if (response.data.success) {
-    console.log(response.data)
-    alert('数据爬取成功')
-    await fetchArticles
-  }else{
-    alert('爬取失败');
-  }
-  } catch (error){
-    console.log('爬取失败',error)
-    alert('爬取数据发生错误')
-  }
+    if (response.data.success) {
+      console.log(response.data)
+      alert('数据爬取成功')
+      await fetchArticles
+    }else{
+      alert('爬取失败');
+    }
+    } catch (error){
+      console.log('爬取失败',error)
+      alert('爬取数据发生错误')
+    }
 }
+// 搜索文章
+const handleSearch = (searchValue) => {
+  console.log(searchValue);
+};
 
 // 初始化
 onMounted(async () => {
@@ -404,40 +405,6 @@ li p {
 
 .search-bar button:hover {
   background-color: #3aa876;
-}
-
-/* spider样式 */
-.spider{
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.spider .card{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background-color: #ffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease box-shadow 0.3s ease;
-}
-.spider .card i{
-  font-size: 24px;
-  color: #42b983;
-}
-/* spider标题 */
-.spider .card h3 {
-  margin: 0;
-  font-size: 16px;
-  color:#333
-}
-
-.spider .card:hover{
-  transform: translateY(-2px);
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .article-avatar {
   width: 40px;

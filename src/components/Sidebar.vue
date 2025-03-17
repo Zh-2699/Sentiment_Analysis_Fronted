@@ -5,7 +5,7 @@
       <span class="logo-text">舆情分析系统</span>
     </div>
     <ul>
-      <a class="title">首页</a>
+      <a class="title">首页-数据展示</a>
       <li><router-link to="/" class="nav-item"><i class="fas fa-home"></i>首页</router-link></li>
       <li><router-link to="/weibo-articles" class="nav-item"><i class="fas fa-file-alt"></i> 微博文章</router-link></li>
       <li><router-link to="/weibo-comments" class="nav-item"><i class="fas fa-comments"></i> 微博评论</router-link></li>

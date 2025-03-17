@@ -1,11 +1,10 @@
 <template>
   <div class="home-page">
-    <!-- 搜索框 -->
-    <div class="search-bar" :class="{ 'sticky-search': isSticky}">
-      <input type="text" placeholder="搜索舆情数据..." />
-      <button>搜索</button>
-    </div>
-
+    <SearchBar 
+      placeholder="搜索你感兴趣的内容..." 
+      :isSticky="false" 
+      @search="handleSearch" 
+    />
     <!-- 核心功能入口 -->
     <h1>快速开始</h1>
     <div class="function-cards">
@@ -89,6 +88,7 @@ import DailyChart from './charts/DailyChart.vue'; // 导入每日新增文章组
 import WordCloudChart from './charts/WordCloudChart.vue'; // 导入热门关键词组件
 import HotTopics from './charts/HotTopics.vue'; // 导入热点话题组件
 import { useRouter } from 'vue-router';
+import SearchBar from '../components/SearchBar.vue';
 
 export default {
   name: 'HomeView',
@@ -99,6 +99,7 @@ export default {
     DailyChart,
     WordCloudChart,
     HotTopics,
+    SearchBar
   },
   setup() {
     const hotTopics = ref([]); // 热点话题数据
@@ -110,6 +111,9 @@ export default {
     const wordCloudChart = ref(null);
     const router = useRouter();
 
+    const handleSearch = (searchValue) =>{
+      console.log(searchValue);
+    }
     const getHotSearch = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:5000/hotSearch');
@@ -156,7 +160,8 @@ export default {
       toSpider,
       toArticleAnalysis,
       toSentimentAnalysis,
-      toDataManagement
+      toDataManagement,
+      handleSearch
     };
   },
 };
@@ -217,47 +222,6 @@ export default {
   background-color: rgb(245, 247, 251);
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
-}
-
-/* 搜索框样式 */
-.search-bar {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
-  transition: all 0.3s ease;
-}
-
-.sticky-search {
-  position: fixed;
-  margin-top: 15px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9;
-  padding: 10px;
-  width: 80%;
-}
-.search-bar input {
-  width: 60%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-right: none;
-  border-radius: 5px 0 0 5px;
-  font-size: 16px;
-}
-
-.search-bar button {
-  padding: 12px 20px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-  background-color: #3aa876;
 }
 
 /* 核心功能卡片样式 */

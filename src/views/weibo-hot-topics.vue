@@ -1,7 +1,10 @@
 <template>
   <div class="hot-topics">
-    <h1>热点话题分析</h1>
-    <p>这里展示热点话题榜单和趋势分析图表。</p>
+    <div class="page-header">
+      <h1>热点话题分析</h1>
+    </div>
+    
+    <!-- <p>这里展示热点话题榜单和趋势分析图表。</p> -->
 
     <div class="hot-topics-container">
       <!-- 左侧：热点话题榜单 -->
@@ -96,6 +99,18 @@ export default {
   .hot-topics-list {
     max-width: 100%;
   }
+}
+.page-header {
+  margin-bottom: 30px;
+  margin-top: 15px;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  color: #333;
+  border-bottom: 2px solid #42b983;
+  padding-bottom: 10px;
+  display: inline-block;
 }
 
 </style>
