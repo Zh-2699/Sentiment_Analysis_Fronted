@@ -61,6 +61,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import SpiderButton from '../components/button/SpiderButton.vue';
 import SearchBar from '../components/SearchBar.vue';
+import LoadMoreButton from '../components/button/LoadMoreButton.vue';
 
 const articleGroups = ref([]); // 分组数据
 const selectedGroup = ref('热门'); // 当前选中的分组

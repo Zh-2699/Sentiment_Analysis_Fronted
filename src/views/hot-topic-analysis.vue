@@ -51,7 +51,7 @@ const topic = ref({
 
 /* 页面头部 */
 .page-header {
-  text-align: center;
+  /* text-align: center; */
   margin-bottom: 30px;
 }
 

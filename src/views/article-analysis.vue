@@ -72,10 +72,13 @@
         </div>
 
         <!-- 空状态 -->
-        <div v-else class="empty-state">
+        <!-- <div v-else class="empty-state">
           <i class="fas fa-comment-slash"></i>
           <p>暂无评论数据</p>
         </div>
+
+        <EmptyState v-if="comments.length === 0" icon="fas fa-comment-slash" message="暂无评论数据" /> -->
+
       </div>
     </div>
   </div>
@@ -86,6 +89,7 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import EmptyState from '../components/EmptyState.vue';
 
 // 获取 Vuex store
 const store = useStore();
