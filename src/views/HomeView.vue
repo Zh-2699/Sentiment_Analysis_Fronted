@@ -63,15 +63,15 @@
       
     </div>
     <!-- 最新舆情文章 -->
-      <div class="realtime-updates">
-        <h3>最新舆情文章123123123123</h3>
-        <ul>
-          <li>文章1：舆情热点分析</li>
-          <li>文章2：数据可视化趋势</li>
-          <li>文章3：情感分布解读</li>
-          <li>文章4：舆情监测案例</li>
-        </ul>
-      </div>
+      <ArticleList 
+          :articles="articles" 
+          :hasMore="hasMore" 
+          title="最新文章数据" 
+          @load-more="loadMoreArticles" 
+          @view-article="viewArticle"
+          @analyze-article="analyzeArticle"
+        />
+
   </div>
 </template>
 
@@ -89,6 +89,7 @@ import WordCloudChart from './charts/WordCloudChart.vue'; // 导入热门关键�
 import HotTopics from './charts/HotTopics.vue'; // 导入热点话题组件
 import { useRouter } from 'vue-router';
 import SearchBar from '../components/SearchBar.vue';
+import ArticleList from '../components/ArticleList.vue';
 
 export default {
   name: 'HomeView',
@@ -99,7 +100,8 @@ export default {
     DailyChart,
     WordCloudChart,
     HotTopics,
-    SearchBar
+    SearchBar,
+    ArticleList
   },
   setup() {
     const hotTopics = ref([]); // 热点话题数据
@@ -110,6 +112,8 @@ export default {
     const dailyChart = ref(null);
     const wordCloudChart = ref(null);
     const router = useRouter();
+    const articles = ref([]); // 文章列表
+    const hasMore = ref(true);
 
     const handleSearch = (searchValue) =>{
       console.log(searchValue);
@@ -142,6 +146,24 @@ export default {
       router.push('/article-data-update');
 
     };
+    // 加载更多文章
+    const loadMoreArticles = () => {
+      console.log('加载更多文章...');
+      // 这里可以增加加载更多的逻辑
+      hasMore.value = false; // 假设加载完了
+    };
+
+    // 查看文章
+    const viewArticle = (article) => {
+      console.log('查看文章:', article);
+      window.open(article.detailUrl, '_blank');
+    };
+
+    // 分析文章
+    const analyzeArticle = (article) => {
+      console.log('分析文章:', article);
+      // 这里可以添加分析文章的逻辑
+    };
 
     onMounted(() => {
       getHotSearch();
@@ -156,12 +178,17 @@ export default {
       sourceMapChart, // 返回 sourceMapChart
       dailyChart,
       wordCloudChart,
+      articles,
+      hasMore,
       toHotTopicsAnaylsis,
       toSpider,
       toArticleAnalysis,
       toSentimentAnalysis,
       toDataManagement,
-      handleSearch
+      handleSearch,
+      loadMoreArticles,
+      viewArticle,
+      analyzeArticle,
     };
   },
 };
