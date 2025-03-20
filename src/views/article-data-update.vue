@@ -21,7 +21,7 @@
     </div>
 
     <!-- 文章数据管理 -->
-    <h1>文章数据管理</h1>
+    <h1>文章数据更新</h1>
     <div class="article-list">
       <ul v-if="filteredArticles.length">
         <li v-for="article in filteredArticles" :key="article.id">

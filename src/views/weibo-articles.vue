@@ -1,3 +1,4 @@
+<!-- weibo-articles.vue -->
 <template>
   <div class="article-page">
     <!-- 搜索文章 -->
@@ -17,8 +18,10 @@
           </option>
         </select>
       </div>
-      <SpiderButton @crawl="crawData" />
+      <SpiderButton :showIcon="true" @crawl="showCrawlDialog" />
     </div>
+    <!-- 对话框 -->
+     <CrawlDialog :isVisible="isDialogVisible" @crawl="(done) =>crawData(done)" @close="isDialogVisible = flase" />
 
     <!-- 文章展示区域 -->
     <div class="article-list">
@@ -62,6 +65,7 @@ import { useStore } from 'vuex';
 import SpiderButton from '../components/button/SpiderButton.vue';
 import SearchBar from '../components/SearchBar.vue';
 import LoadMoreButton from '../components/button/LoadMoreButton.vue';
+import CrawlDialog from '../components/CrawlDialog.vue';
 
 const articleGroups = ref([]); // 分组数据
 const selectedGroup = ref('热门'); // 当前选中的分组
@@ -73,6 +77,7 @@ const hasMore = ref(true); // 是否还有更多文章
 const loading = ref(false); // 是否正在加载数据
 const router = useRouter()
 const store = useStore();
+const isDialogVisible = ref(false); // 是否显示对话框
 
 
 // 获取分组导航数据
@@ -152,8 +157,14 @@ const analyzeArticle = (event ,article) => {
   store.dispatch('setSelectedArticles', article);
   router.push('/article-analysis',)
 }
+// 处理点击爬取按钮，显示对话框
+const showCrawlDialog = () => {
+  isDialogVisible.value = true;
+};
 //爬取数据
-const crawData = async () =>{
+const crawData = async (done) =>{
+  isDialogVisible.value = false;
+  // console.log("✅ weibo-articles: crawData 开始");
   try{
     const response = await axios.post('http://127.0.0.1:5000/article/crawl', {
       group: selectedGroup.value
@@ -168,6 +179,10 @@ const crawData = async () =>{
     } catch (error){
       console.log('爬取失败',error)
       alert('爬取数据发生错误')
+    } finally {
+      // console.log("✅ weibo-articles: 执行 done(), 确保按钮恢复");
+      if (typeof done === 'function')
+        done();
     }
 }
 // 搜索文章

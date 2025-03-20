@@ -20,16 +20,25 @@
 
     <!-- 热点话题爬取 -->
     <div class="hot-topics-section">
-      <h2>热点话题爬取</h2>
+      <h2>热点话题爬取 </h2>
+      <div class="spider-button">
+        <SpiderButton :showIcon="true" buttonText="爬取" @crawl="showCrawlDialog" />
+      </div>
+      
       <div class="hot-topics">
         <button v-for="(topic, index) in hotTopics" :key="index" @click="fetchTopicData(topic)">
           {{ topic }}
         </button>
       </div>
       <div v-if="topicResults.length" class="results">        
+      
       </div>
     </div>
-
+    <CrawlDialog 
+      :isVisible="isDialogVisible" 
+      @crawl="(done) => crawData(selectedTopic, done)" 
+      @close="isDialogVisible = false" 
+    />
     <!-- 文章展示区域 -->
     <div class="article-section">
       <div class="page-header">
@@ -60,27 +69,36 @@
 </template>
 
 <script>
-import { computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
 import SearchBar from "../components/SearchBar.vue";
+import SpiderButton from "../components/button/SpiderButton.vue";
+import CrawlDialog from "../components/CrawlDialog.vue";
 
 export default {
   name: "CrawlingDataView",
-  components: { SearchBar },
+  components: { SearchBar, SpiderButton, CrawlDialog },
   setup() {
     const store = useStore();
-    const articles = computed(() => store.getters.articles); // 获取 Vuex 里的文章数据
+    const articles = computed(() => store.getters.articles);
+    const isDialogVisible = ref(false);
+    const selectedTopic = ref("");
 
     const viewArticle = (article) => {
       console.log("点击查看文章:", article);
       window.open(article.detailUrl, "_blank");
     };
 
+    const showCrawlDialog = (topic) => {
+      selectedTopic.value = topic;
+      isDialogVisible.value = true;
+    };
+
     onMounted(() => {
-      store.dispatch("fetchArticles"); // 页面加载时获取文章数据
+      store.dispatch("fetchArticles");
     });
 
-    return { articles, viewArticle };
+    return { articles, viewArticle, isDialogVisible, showCrawlDialog, selectedTopic };
   },
   data() {
     return {
@@ -99,6 +117,29 @@ export default {
     },
     fetchTopicData(topic) {
       this.topicResults = [`话题 ${topic} - 相关数据 1`, `话题 ${topic} - 相关数据 2`, `话题 ${topic} - 相关数据 3`];
+    },
+    async crawData(topic, done) {
+      this.isDialogVisible = false;
+      console.log(`✅ 开始爬取话题: ${topic}`);
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/article/crawl`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic }),
+        });
+        const data = await response.json();
+        if (data.success) {
+          console.log(data);
+          alert(`爬取成功: ${topic}`);
+        } else {
+          alert("爬取失败");
+        }
+      } catch (error) {
+        console.error("爬取失败", error);
+        alert("爬取数据发生错误");
+      } finally {
+        if (typeof done === "function") done();
+      }
     }
   }
 };
@@ -175,5 +216,12 @@ h2 {
   border-bottom: 2px solid #42b983;
   padding-bottom: 10px;
   display: inline-block;
+}
+.spider-button{
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  
 }
 </style>
