@@ -103,7 +103,7 @@ export default {
   data() {
     return {
       searchResults: [],
-      hotTopics: ["人工智能", "新能源", "股票市场", "科技前沿", "国际新闻"],
+      hotTopics: ["人工智能", "新能源", "股票市场", "科技前沿", "国际新闻","人工智障"],
       topicResults: []
     };
   },
@@ -175,6 +175,7 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  width: 30%;
 }
 
 .hot-topics button {
